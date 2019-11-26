@@ -3,30 +3,26 @@ class RestaurantsController < ApplicationController
 
   # GET /restaurants
   def index
-    @restaurants = Restaurant.all
+    @restaurants = policy_scope(Restaurant)
   end
 
   # GET /restaurants/1
   def show
+    # no @restaurant because it's in set_restaurant
+    # @restaurant
+    authorize @restaurant
   end
 
   # GET /restaurants/new
   def new
     @restaurant = Restaurant.new
-  end
-
-  # GET /restaurants/1/edit
-  def edit
-    if @restaurant.user == current_user
-      # render the page
-    else
-      # redirect
-    end
+    authorize @restaurant
   end
 
   # POST /restaurants
   def create
     @restaurant = Restaurant.new(restaurant_params)
+    authorize @restaurant
     @restaurant.user = current_user
     if @restaurant.save
       redirect_to @restaurant, notice: 'Restaurant was successfully created.'
@@ -35,8 +31,16 @@ class RestaurantsController < ApplicationController
     end
   end
 
+
+
+  # GET /restaurants/1/edit
+  def edit
+    authorize @restaurant
+  end
   # PATCH/PUT /restaurants/1
   def update
+    authorize @restaurant
+
     if @restaurant.update(restaurant_params)
       redirect_to @restaurant, notice: 'Restaurant was successfully updated.'
     else

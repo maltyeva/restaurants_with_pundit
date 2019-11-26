@@ -14,8 +14,10 @@
         <td><%= restaurant.name %></td>
         <td><%= restaurant.user.email %></td>
         <td><%= link_to 'Show', restaurant %></td>
-        <% if restaurant.user == current_user %>
+        <% if policy(restaurant).edit? %>
           <td><%= link_to 'Edit', edit_restaurant_path(restaurant) %></td>
+        <% end %>
+        <% if policy(restaurant).destroy? %>
           <td><%= link_to 'Destroy', restaurant, method: :delete, data: { confirm: 'Are you sure?' } %></td>
         <% end %>
       </tr>
@@ -23,4 +25,9 @@
   </tbody>
 </table>
 <br>
-<%= link_to 'New Restaurant', new_restaurant_path %>
+<% if policy(Restaurant).new? %>
+  <%= link_to 'New Restaurant', new_restaurant_path %>
+<% end %>
+<div class="card-category" style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('<%= @restaurant.photo.nil? ? image_path 'default.jpg' : cl_image_path @restaurant.photo %>')">
+  Breakfast
+</div>
